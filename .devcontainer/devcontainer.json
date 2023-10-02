@@ -2,8 +2,6 @@
     "name": "copilot survey dev container",
     "postCreateCommand": "pip install openpyxl",
     "extensions": [
-        "ms-sarifvscode.sarif-viewer",
-        "github.copilot-nightly",
         "github.copilot-chat"
     ]
 }
