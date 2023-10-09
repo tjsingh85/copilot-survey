@@ -30,9 +30,11 @@ df = pd.DataFrame(columns=['PR URL', 'Org', 'Repo', 'Creator', 'Used Copilot', '
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-token', type=str, help='GitHub token', required=True)
+    parser.add_argument('-org', type=str, help='Org name', required=True)
+    parser.add_argument('-label', type=str, help='PR label', required=True)
     args = parser.parse_args()
 
-    pull_requests = get_pull_requests('org-name', 'label', args.token)
+    pull_requests = get_pull_requests(args.org, args.label, args.token)
 
     for pr in pull_requests:
         org = pr['base']['repo']['owner']['login']
@@ -53,7 +55,7 @@ if __name__ == "__main__":
                 answers[question] = "N/A"
 
         # Append the data to the DataFrame
-        df = df.append({
+        df = df._append({
             'PR URL': pr_url,
             'Org': org,
             'Repo': pr_repo,
