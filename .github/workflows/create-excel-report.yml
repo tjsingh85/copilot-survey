@@ -3,18 +3,27 @@ name: Run Copilot Survey And Upload To S3
 on:
   workflow_dispatch:
 
+env:
+  BUCKET_NAME : "<example-bucket-name>"
+  AWS_REGION : "<example-aws-region>"
+
+# permission can be added at job level or workflow level   
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: '3.10'
 
     #install dependencies
     - name: Install dependencies
@@ -28,12 +37,12 @@ jobs:
 
     # configure AWS OIDC
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v3
       with:
-        role-to-assume:<aws role arn>:role/<role name>
+        role-to-assume: <aws role arn>:role/<role name>
         role-session-name: samplerolesession
         aws-region: ${{ env.AWS_REGION }}
 
     # copy generated excel to S3 bucket
     - name: Copy excel to S3 bucket
-      run: aws s3 cp ./pull_requests.xlsx s3://my-bucket/output.csv
+      run: aws s3 cp ./pull_requests.xlsx s3://${{ env.BUCKET_NAME }}/
