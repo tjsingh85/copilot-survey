@@ -12,29 +12,33 @@ def get_pull_requests(org_name, label, token):
     repos_url = f"https://api.github.com/orgs/{org_name}/repos"
     repos = requests.get(repos_url, headers=headers).json()
 
-    prs_with_label = []
-    for repo in repos:
-        prs_url = f"https://api.github.com/repos/{org_name}/{repo['name']}/pulls"
-        prs = requests.get(prs_url, headers=headers).json()
-        for pr in prs:
-            labels = [label['name'] for label in pr['labels']]
-            if label in labels:
-                prs_with_label.append(pr)
+    prs_with_label = [pr for repo in repos for pr in get_prs_for_repo(org_name, repo['name'], headers) if label in get_labels(pr)]
 
     return prs_with_label
 
-# Create an empty DataFrame
-df = pd.DataFrame(columns=['PR URL', 'Org', 'Repo', 'Creator', 'Used Copilot', 'Time Saved', 'Used Frequency', 'Continue Use'])
+def get_prs_for_repo(org_name, repo_name, headers):
+    prs_url = f"https://api.github.com/repos/{org_name}/{repo_name}/pulls"
+    return requests.get(prs_url, headers=headers).json()
 
-# Usage
+def get_labels(pr):
+    return [label['name'] for label in pr['labels']]
+
+def get_answers(data):
+    questions_and_options = re.findall(r'\*\*\*(.*?)\*\*\*(.*?)(?=\*\*\*|$)', data, re.DOTALL)
+    return {question.strip(): get_selected_option(options) for question, options in questions_and_options}
+
+def get_selected_option(options):
+    selected_option = re.search(r'- \[X\] (.*?)\n', options)
+    return selected_option.group(1) if selected_option else "N/A"
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-token', type=str, help='GitHub token', required=True)
-    parser.add_argument('-org', type=str, help='Org name', required=True)
-    parser.add_argument('-label', type=str, help='PR label', required=True)
+    parser.add_argument('--token', help='GitHub token', required=True)
     args = parser.parse_args()
 
-    pull_requests = get_pull_requests(args.org, args.label, args.token)
+    pull_requests = get_pull_requests('REPLACE_ME_WITH_ORG_NAME', 'REPLACE_ME_WITH_PR_LABEL', args.token)
+
+    df = pd.DataFrame(columns=['PR URL', 'Org', 'Repo', 'Creator', 'Used Copilot', 'Time Saved', 'Used Frequency', 'Continue Use'])
 
     for pr in pull_requests:
         org = pr['base']['repo']['owner']['login']
@@ -42,19 +46,8 @@ if __name__ == "__main__":
         pr_repo = pr['head']['repo']['name']
         creator = pr['user']['login']
         data = pr['body']
+        answers = get_answers(data)
 
-        questions_and_options = re.findall(r'\*\*\*(.*?)\*\*\*(.*?)(?=\*\*\*|$)', data, re.DOTALL)
-        answers = {}
-
-        for question, options in questions_and_options:
-            question = question.strip()
-            selected_option = re.search(r'- \[X\] (.*?)\n', options)
-            if selected_option:
-                answers[question] = selected_option.group(1)
-            else:
-                answers[question] = "N/A"
-
-        # Append the data to the DataFrame
         df = df._append({
             'PR URL': pr_url,
             'Org': org,
@@ -66,5 +59,4 @@ if __name__ == "__main__":
             'Continue Use': answers.get("I felt more productive using Copilot for this PR?", "N/A")
         }, ignore_index=True)
 
-    # Export the DataFrame to an Excel file
     df.to_excel('pull_requests.xlsx', index=False)
