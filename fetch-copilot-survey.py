@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import re
+import argparse
 
 def get_pull_requests(org_name, label, token):
     headers = {
@@ -21,9 +22,6 @@ def get_pull_requests(org_name, label, token):
                 prs_with_label.append(pr)
 
     return prs_with_label
-
-# Usage
-pull_requests = get_pull_requests('org-name', 'label', 'token')
 
 # Create an empty DataFrame
 df = pd.DataFrame(columns=['PR URL', 'Org', 'Repo', 'Creator', 'Used Copilot', 'Time Saved', 'Used Frequency', 'Continue Use'])
@@ -60,3 +58,11 @@ for pr in pull_requests:
 
 # Export the DataFrame to an Excel file
 df.to_excel('pull_requests.xlsx', index=False)
+
+# Usage
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-token', type=str, help='GitHub token', required=True)
+    args = parser.parse_args()
+
+    pull_requests = get_pull_requests('org-name', 'label', args.token)
