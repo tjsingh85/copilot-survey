@@ -10,7 +10,17 @@ def get_pull_requests(org_name, label, token):
     }
 
     repos_url = f"https://api.github.com/orgs/{org_name}/repos"
-    repos = requests.get(repos_url, headers=headers).json()
+    response = requests.get(repos_url, headers=headers)
+
+    if response.status_code != 200:
+        print(f"Failed to fetch repos: {response.status_code}, {response.text}")
+        return []
+
+    repos = response.json()
+
+    if not isinstance(repos, list):
+        print(f"Unexpected response format: {type(repos)}")
+        return []
 
     prs_with_label = [pr for repo in repos for pr in get_prs_for_repo(org_name, repo['name'], headers) if label in get_labels(pr)]
 
@@ -34,9 +44,11 @@ def get_selected_option(options):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--token', help='GitHub token', required=True)
+    parser.add_argument('--org', help='GitHub organization', required=True)
+    parser.add_argument('--label', help='Label for pull requests', required=True)
     args = parser.parse_args()
 
-    pull_requests = get_pull_requests('REPLACE_ME_WITH_ORG_NAME', 'REPLACE_ME_WITH_PR_LABEL', args.token)
+    pull_requests = get_pull_requests(args.org, args.label, args.token)
 
     df = pd.DataFrame(columns=['PR URL', 'Org', 'Repo', 'Creator', 'Used Copilot', 'Time Saved', 'Used Frequency', 'Continue Use'])
 
