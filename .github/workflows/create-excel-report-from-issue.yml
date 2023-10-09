@@ -24,7 +24,7 @@ jobs:
         echo "LABEL_NAME=$LABEL_NAME" >> $GITHUB_ENV
 
     - name: Run fetch-copilot-survey.py
-      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN }} -org ${{ github.repository_owner }} -label $LABEL_NAME
+      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ github.repository_owner }} -label $LABEL_NAME
 
     - name: Comment on issue
       uses: actions/github-script@v3

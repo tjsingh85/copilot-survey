@@ -30,7 +30,7 @@ jobs:
 
     # Run the python file
     - name: Run fetch-copilot-survey.py
-      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
+      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
 
     # configure AWS OIDC
     - name: Configure AWS credentials
