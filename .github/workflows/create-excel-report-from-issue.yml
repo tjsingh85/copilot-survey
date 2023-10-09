@@ -4,6 +4,10 @@ on:
   issues:
     types: [opened, labeled]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   run-copilot-survey:
     if: contains(github.event.issue.labels.*.name, 'copilot-survey')
@@ -12,22 +16,33 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
+    
+    - name: Get 'copilot-survey' label
+      id: get-label
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        LABEL_NAME=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[] | select(.name=="copilot-survey") | .name')
+        echo "LABEL_NAME=$LABEL_NAME" >> $GITHUB_ENV
 
     - name: Run fetch-copilot-survey.py
-      run: python fetch-copilot-survey.py
+      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN }} -org ${{ github.repository_owner }} -label $LABEL_NAME
 
-    - name: Upload pull_requests.xlsx to issue
-      uses: actions/upload-artifact@v2
+    - name: Comment on issue
+      uses: actions/github-script@v3
       with:
-        name: pull_requests.xlsx
-        path: pull_requests.xlsx
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const fs = require('fs');
+          const issue_number = context.issue.number;
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const path = 'pull_requests.xlsx';
+          const content = fs.readFileSync(path, {encoding: 'base64'});
+
+          github.rest.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path,
+            message: 'uploading pull_requests.xlsx',
+            content,
+            issue_number
+          });
