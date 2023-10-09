@@ -59,18 +59,17 @@ Once you run the python code, An excel file with survey results will be availabl
 - You can configure the github action [Run Copilot Survey And Upload To S3](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/create-excel-report.yml) as per your needs
 - This action runs the python code and uploads the excel file to S3 bucket ( using OIDC)
 - You can customize this step to send the excel via email or upload to another artifact location
+- Fill the env variables on the top of the workflow file
 
 ### Codepsace
 - open the codespaces
-- provide org name , label and github token
-```
-  pull_requests = get_pull_requests('org-name', 'label', 'token')
-```
+- provide org name , label and github token as arguments while running the python program
+
 - Run
 ```
-python fetch-copilot-survey.py
+python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
 ```
-- Excel file containing the results will be created in the root folder
+- Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
 ### Locally
 - git clone the repo
@@ -79,18 +78,15 @@ python fetch-copilot-survey.py
 ```
 pip install pandas
 pip install openpyxl
-pip install re
+pip install argparse
 pip install requests
-```
-- provide org name , label and github token
-```
-  pull_requests = get_pull_requests('org-name', 'label', 'token')
+
 ```
 - Run
 ```
-python fetch-copilot-survey.py
+python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
 ```
-- Excel file containing the results will be created in the root folder
+- Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
 ## Feedback
 If you have any feedback, feel free to open issues or pullrequest in this repo.
