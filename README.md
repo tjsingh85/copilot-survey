@@ -64,7 +64,10 @@ Once you run the python code, An excel file with survey results will be availabl
 ### Codepsace
 - open the codespaces
 - provide org name , label and github token as arguments while running the python program
-
+- install python dependencies using pip
+```
+pip install -r requirements.txt
+```
 - Run
 ```
 python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
@@ -76,11 +79,7 @@ python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
 - hope you have python installed on your machine :). if not , you can download from [here](https://www.python.org/downloads/)
 - install python dependencies using pip
 ```
-pip install pandas
-pip install openpyxl
-pip install argparse
-pip install requests
-
+pip install -r requirements.txt
 ```
 - Run
 ```
