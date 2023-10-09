@@ -54,6 +54,12 @@ Once you run the python code, An excel file with survey results will be availabl
 
 ## How to Run This Feature
 
+### GitHub Actions
+
+- You can configure the github action [Run Copilot Survey And Upload To S3](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/create-excel-report.yml) as per your needs
+- This action runs the python code and uploads the excel file to S3 bucket ( using OIDC)
+- You can customize this step to send the excel via email or upload to another artifact location
+
 ### Codepsace
 - open the codespaces
 - provide org name , label and github token
