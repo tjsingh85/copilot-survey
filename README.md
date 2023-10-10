@@ -67,10 +67,8 @@ Once you run the python code, An excel file with survey results will be availabl
 #### [Run Copilot Survey On Creation Of Issue](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/.github/workflows/create-excel-report-from-issue.yml)
 
 - You can configure the github action [Run Copilot Survey And Upload To S3](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/create-excel-report.yml) as per your needs
-- This action runs the python code and uploads the excel file to S3 bucket ( using OIDC)
-- You can customize this step to send the excel via email or upload to another artifact location
-- Fill the env variables on the top of the workflow file
-- Configure GitHub Token as action's secret with permission to query org api endpoint
+- This action runs the python code, uploads the excel file GitHub Actions Artifacts and add a comment on the opened issue with the artifact URL.
+- Configure GitHub Token as action's secret with adequate permission
 
 ### Codepsace
 - open the codespaces
@@ -81,7 +79,7 @@ pip install -r requirements.txt
 ```
 - Run
 ```
-python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
+python fetch_survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
 ```
 - Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
@@ -94,7 +92,7 @@ pip install -r requirements.txt
 ```
 - Run
 ```
-python fetch-copilot-survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
+python fetch_survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
 ```
 - Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
