@@ -46,7 +46,7 @@ jobs:
           const owner = context.repo.owner;
           const repo = context.repo.repo;
           const run_id = context.runId;
-          const comment = `You can download the artifact from [here](https://github.com/${owner}/${repo}/actions/runs/${run_id})`;
+          const comment = `You can download the excel file from [here](https://github.com/${owner}/${repo}/actions/runs/${run_id})`;
           github.rest.issues.createComment({
             owner: owner,
             repo: repo,
