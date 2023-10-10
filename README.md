@@ -71,28 +71,28 @@ Once you run the python code, An excel file with survey results will be availabl
 - Configure GitHub Token as action's secret with adequate permission
 
 ### Codepsace
-- open the codespaces
-- provide org name , label and github token as arguments while running the python program
-- install python dependencies using pip
+- Open codespaces
+- Provide org name , label and github token as arguments while running the python program
+- Install python dependencies using pip
 ```
 pip install -r requirements.txt
 ```
 - Run
 ```
-python fetch_survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
+python fetch_survey.py --token GITHUB_TOKEN --org ORG_NAME --label PR_LABEL
 ```
 - Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
 ### Locally
-- git clone the repo
-- hope you have python installed on your machine :). if not , you can download from [here](https://www.python.org/downloads/)
-- install python dependencies using pip
+- Git clone the repo
+- Hope you have python installed on your machine :). if not , you can download from [here](https://www.python.org/downloads/)
+- Install python dependencies using pip
 ```
 pip install -r requirements.txt
 ```
 - Run
 ```
-python fetch_survey.py -token GITHUB_TOKEN -org ORG_NAME -label PR_LABEL
+python fetch_survey.py --token GITHUB_TOKEN --org ORG_NAME --label PR_LABEL
 ```
 - Excel file (pull_requests.xlsx) containing the results will be created in the root folder
 
