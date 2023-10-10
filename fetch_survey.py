@@ -38,7 +38,7 @@ def get_answers(data):
     return {question.strip(): get_selected_option(options) for question, options in questions_and_options}
 
 def get_selected_option(options):
-    selected_option = re.search(r'- \[X\] (.*?)\n', options)
+    selected_option = re.search(r'- \[\s*X\s*\] (.*?)\n', options)
     return selected_option.group(1) if selected_option else "N/A"
 
 if __name__ == "__main__":

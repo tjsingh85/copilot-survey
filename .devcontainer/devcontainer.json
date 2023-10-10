@@ -1,6 +1,5 @@
 {
     "name": "copilot survey dev container",
-    "postCreateCommand": "pip install openpyxl",
     "extensions": [
         "github.copilot-chat"
     ]

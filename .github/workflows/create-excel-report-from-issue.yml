@@ -2,7 +2,7 @@ name: Run Copilot Survey on Issue Creation
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
 
 permissions:
   id-token: write
@@ -17,32 +17,39 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
     - name: Get 'copilot-survey' label
       id: get-label
       run: |
         LABEL_NAME=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[] | select(.name=="copilot-survey") | .name')
         echo "LABEL_NAME=$LABEL_NAME" >> $GITHUB_ENV
 
-    - name: Run fetch-copilot-survey.py
-      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ github.repository_owner }} -label $LABEL_NAME
+    - name: Run fetch_survey.py
+      run: python fetch_survey.py --token ${{ secrets.GITHUB_TOKEN_WITH_ENOUGH_PERMISSION }} --org ${{ github.repository_owner }} --label ${{ env.LABEL_NAME }}
 
-    - name: Comment on issue
-      uses: actions/github-script@v3
+    - name: Upload Excel file
+      uses: actions/upload-artifact@v2
       with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
+        name: pull_requests
+        path: ./pull_requests.xlsx
+
+    - name: Comment on issue with artifact URL
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN_WITH_ENOUGH_PERMISSION}}
         script: |
-          const fs = require('fs');
           const issue_number = context.issue.number;
           const owner = context.repo.owner;
           const repo = context.repo.repo;
-          const path = 'pull_requests.xlsx';
-          const content = fs.readFileSync(path, {encoding: 'base64'});
-
-          github.rest.repos.createOrUpdateFileContents({
-            owner,
-            repo,
-            path,
-            message: 'uploading pull_requests.xlsx',
-            content,
-            issue_number
+          const run_id = context.runId;
+          const comment = `You can download the artifact from [here](https://github.com/${owner}/${repo}/actions/runs/${run_id})`;
+          github.rest.issues.createComment({
+            owner: owner,
+            repo: repo,
+            issue_number: issue_number,
+            body: comment
           });

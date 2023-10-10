@@ -8,8 +8,7 @@ env:
   LABEL: "<github-pr-label-name>"
   BUCKET_NAME : "<example-bucket-name>"
   AWS_REGION : "<example-aws-region>"
-
-# permission can be added at job level or workflow level   
+ 
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read    # This is required for actions/checkout
@@ -22,15 +21,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    #install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Run the python file
-    - name: Run fetch-copilot-survey.py
-      run: python fetch-copilot-survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
+    - name: Run fetch_survey.py
+      run: python fetch_survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
 
     # configure AWS OIDC
     - name: Configure AWS credentials
