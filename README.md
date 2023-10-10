@@ -27,7 +27,7 @@ When you add a pull request template to your repository, project contributors wi
 ### How To Add Additional Questions
 If you want to add more questions to pull request template, prefix and suffix your question with '***'. This is being use as question identifier in the regex pattern. See the pull_request_template.md in the root folder of this repo.
 
-Also add the corresponding question in the fetch-copilot-survey.py in this section:
+Also add the corresponding question in the fetch_survey.py in this section:
 ```
     # Append the data to the DataFrame
     df = df._append({
