@@ -66,7 +66,7 @@ Once you run the python code, An excel file with survey results will be availabl
 
 #### [Run Copilot Survey On Creation Of Issue](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/.github/workflows/create-excel-report-from-issue.yml)
 
-- You can configure the github action [Run Copilot Survey And Upload To S3](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/create-excel-report.yml) as per your needs
+- You can configure the github action [Run Copilot Survey On Creation Of Issue](https://github.com/tjsingh85/copilot-survey/blob/main/.github/workflows/create-excel-report-from-issue.yml) as per your needs
 - This action runs the python code, uploads the excel file GitHub Actions Artifacts and add a comment on the opened issue with the artifact URL.
 - Configure GitHub Token as action's secret with adequate permission
 
