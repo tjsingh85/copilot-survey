@@ -27,7 +27,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run fetch_survey.py
-      run: python fetch_survey.py -token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
+      run: python fetch_survey.py --token ${{ secrets.GITHUB_TOKEN_WITH_ORG_API_PERMISSION }} -org ${{ env.ORG_NAME }} -label ${{ env.LABEL }}
 
     # configure AWS OIDC
     - name: Configure AWS credentials
